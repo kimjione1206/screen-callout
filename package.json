@@ -1,0 +1,12 @@
+{
+  "name": "screen-callout",
+  "version": "0.1.0",
+  "description": "맥 화면 위에 AI가 분석한 UI 설명 콜아웃을 투명 오버레이로 띄우기",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^33.2.0"
+  }
+}

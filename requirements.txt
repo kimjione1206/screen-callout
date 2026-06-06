@@ -1,0 +1,6 @@
+# Python dependencies (macOS, Apple Silicon)
+# rfdetr pulls in supervision / torch / torchvision / transformers automatically.
+easyocr
+opencv-python
+rfdetr
+Pillow

@@ -1,0 +1,28 @@
+screen-callout
+Copyright 2026 kimjione1206
+
+Licensed under the Apache License, Version 2.0 (see LICENSE).
+
+This product includes third-party software:
+
+- Electron — MIT License — https://github.com/electron/electron
+- EasyOCR — Apache-2.0 — https://github.com/JaidedAI/EasyOCR
+    (transitively depends on python-bidi, LGPL-3.0, used unmodified as a library)
+- opencv-python (cv2) — Apache-2.0 — https://github.com/opencv/opencv-python
+- RF-DETR (core) — Apache-2.0 — https://github.com/roboflow/rf-detr
+- supervision — MIT — https://github.com/roboflow/supervision
+- PyTorch / torchvision — BSD-3-Clause — https://github.com/pytorch/pytorch
+- transformers, huggingface_hub — Apache-2.0 — https://github.com/huggingface
+- Pillow — HPND (PIL/MIT-CMU) — https://github.com/python-pillow/Pillow
+- NumPy — BSD-3-Clause — https://github.com/numpy/numpy
+
+AI model (downloaded separately, not redistributed in this repository):
+- UI-DETR-1 — MIT — racineai/UI-DETR-1 on HuggingFace
+  https://huggingface.co/racineai/UI-DETR-1
+  The model's training data is sourced from multiple Roboflow Universe datasets;
+  individual dataset licenses are not warranted by the model card.
+
+Trademarks:
+- Mac and macOS are registered trademarks of Apple Inc. This project is unofficial
+  and not affiliated with, endorsed by, or sponsored by Apple Inc.
+- Blender is a trademark of the Blender Foundation.

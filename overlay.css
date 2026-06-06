@@ -1,0 +1,156 @@
+/* 오버레이 전체: 완전 투명, 스크롤/선택 없음 */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  overflow: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: -apple-system, "Apple SD Gothic Neo", system-ui, sans-serif;
+}
+
+#layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* 빈 공간은 클릭 통과, .callout 만 클릭 받음 */
+}
+
+/* 콜아웃 = UI 요소를 감싸는 사각형 박스 */
+.callout {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2px solid #ff3b30;
+  border-radius: 4px;
+  background: rgba(255, 59, 48, 0.07);
+  pointer-events: auto; /* 이 박스만 클릭/hover 받음 */
+  cursor: pointer;
+}
+
+/* 번호+라벨(+상세) 태그: 기본은 박스 위쪽에 붙음 */
+.callout .tag {
+  position: absolute;
+  bottom: 100%;
+  left: -2px;
+  margin-bottom: 6px; /* 물방울 뾰족이 박스 경계에 닿고 멈추도록(침범 방지) */
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+}
+
+/* 화면 상단에 붙은 박스는 태그가 잘리니 아래로 뒤집음 */
+.callout.flip .tag {
+  bottom: auto;
+  top: 100%;
+  margin-bottom: 0;
+  margin-top: 6px; /* 물방울 뾰족이 박스 경계에 닿고 멈추도록(침범 방지) */
+}
+
+.tag-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 번호 배지 — 물방울(핀) 모양: 뾰족한 끝이 가리키는 UI 요소를 향한다 */
+.callout .badge {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 24px;
+  background: #ff3b30;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg); /* 기본: 뾰족 끝이 아래(박스) 방향 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  border: 2px solid #fff;
+}
+
+/* 숫자는 배지 회전과 반대로 돌려 똑바로 보이게 */
+.callout .badge .num {
+  display: block;
+  transform: rotate(45deg);
+  color: #fff;
+  font-size: 12.5px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* 상단 요소(flip): 뾰족 끝이 위(메뉴바) 방향을 가리킴 */
+.callout.flip .badge {
+  transform: rotate(135deg);
+}
+.callout.flip .badge .num {
+  transform: rotate(-135deg);
+}
+
+/* 한 줄 라벨 칩 */
+.callout .label {
+  flex: 0 0 auto;
+  max-width: 280px;
+  padding: 4px 9px;
+  border-radius: 7px;
+  background: rgba(20, 20, 22, 0.92);
+  color: #fff;
+  font-size: 12.5px;
+  line-height: 1.3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: 0 2px 9px rgba(0, 0, 0, 0.4);
+}
+
+/* 상세 설명 (번호/라벨 클릭 시 펼침) */
+.callout .detail {
+  display: none;
+  max-width: 320px;
+  padding: 9px 11px;
+  border-radius: 9px;
+  background: rgba(20, 20, 22, 0.97);
+  color: #f2f2f2;
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: normal;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.callout.open .detail {
+  display: block;
+}
+
+.callout.open {
+  border-color: #0a84ff;
+  background: rgba(10, 132, 255, 0.08);
+}
+
+.callout.open .badge {
+  background: #0a84ff;
+}
+
+/* 그룹: 여러 메뉴를 묶은 파란 박스 */
+.callout.group {
+  border-color: #0a84ff;
+  background: rgba(10, 132, 255, 0.12);
+}
+.callout.group .badge {
+  background: #0a84ff;
+}
+/* 펼친 상태: 박스는 점선으로 남아 다시 누르면 접힘 */
+.callout.group.expanded {
+  background: rgba(10, 132, 255, 0.04);
+  border-style: dashed;
+}
+
+/* 펼쳐진 멤버: 작은 빨간 박스 */
+.callout.member .badge {
+  width: 16px;
+  height: 16px;
+  border-width: 1.5px;
+}
+.callout.member .num {
+  font-size: 10px;
+}
