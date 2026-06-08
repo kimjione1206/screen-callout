@@ -88,3 +88,18 @@ function render(data) {
 
 window.overlayAPI.onCallouts(render);
 window.addEventListener('resize', () => { if (lastData) render(lastData); });
+
+// 스캔 중에는 "🔍 화면 스캔 중…" 배너를 띄우고, 완료되면 지운다.
+window.overlayAPI.onStatus((scanning) => {
+  let banner = document.getElementById('scan-banner');
+  if (scanning) {
+    if (!banner) {
+      banner = document.createElement('div');
+      banner.id = 'scan-banner';
+      banner.textContent = '🔍 화면 스캔 중…';
+      document.body.appendChild(banner);
+    }
+  } else if (banner) {
+    banner.remove();
+  }
+});

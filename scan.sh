@@ -9,7 +9,13 @@ cd "$DIR"
 echo '{"image":{"width":0,"height":0},"callouts":[]}' > callouts.json
 
 # 2) 1초 뒤 현재 화면 캡처(오버레이가 비워질 시간)
-screencapture -x -T 1 -t png now.png
+# 인자로 "x,y,w,h"(대상 모니터 영역)를 받으면 그 영역만, 없으면 화면 전체를 캡처
+REGION="$1"
+if [ -n "$REGION" ]; then
+  screencapture -x -T 1 -t png -R"$REGION" now.png
+else
+  screencapture -x -T 1 -t png now.png
+fi
 
 # 3) 통합 검출(텍스트+아이콘) → 4) 같은 바끼리 묶어 콜아웃으로 명시(그룹화)
 PYTORCH_ENABLE_MPS_FALLBACK=1 python3 detect_combined.py now.png boxes.json

@@ -8,6 +8,7 @@ weights-uidetr/
 crops/
 boxes.json
 callouts.json
+index.json
 now.png
 screen.png
 *.log

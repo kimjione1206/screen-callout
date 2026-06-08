@@ -154,3 +154,21 @@ html, body {
 .callout.member .num {
   font-size: 10px;
 }
+
+/* 스캔 중 안내 배너: 화면 상단 중앙에 잠깐 뜸 */
+/* transparent 창에서 position:fixed는 캡처/렌더에 누락될 수 있어 absolute 사용 */
+#scan-banner {
+  position: absolute;
+  top: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 16px;
+  border-radius: 10px;
+  background: rgba(20, 20, 22, 0.92);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 9999;
+}

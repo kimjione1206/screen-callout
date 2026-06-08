@@ -8,4 +8,6 @@ contextBridge.exposeInMainWorld('overlayAPI', {
   onCallouts: (cb) => ipcRenderer.on('callouts:update', (_e, data) => cb(data)),
   // 마우스가 콜아웃 위/밖일 때 클릭 통과 여부를 메인에 알림
   setIgnore: (ignore) => ipcRenderer.send('overlay:setIgnore', ignore),
+  // 메인이 "스캔 중/완료"를 알리면 콜백 (true=스캔 시작, false=완료)
+  onStatus: (cb) => ipcRenderer.on('overlay:status', (_e, scanning) => cb(scanning)),
 });

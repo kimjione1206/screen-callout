@@ -2,9 +2,10 @@
 // 역할: 맥 화면 전체를 덮는 "투명 + 클릭 통과" 오버레이 창을 띄우고,
 //       callouts.json이 바뀌면 그 내용을 오버레이 화면(렌더러)에 전달한다.
 
-const { app, BrowserWindow, screen, ipcMain } = require('electron');
+const { app, BrowserWindow, screen, ipcMain, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const { spawn } = require('child_process');
 
 const CALLOUTS_PATH = path.join(__dirname, 'callouts.json');
 let win = null;
@@ -32,6 +33,7 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: false,
+      backgroundThrottling: false, // 포커스 없는 오버레이도 타이머/IPC를 정상 처리
     },
   });
 
@@ -80,5 +82,40 @@ ipcMain.on('overlay:setIgnore', (_e, ignore) => {
   }
 });
 
-app.whenReady().then(createWindow);
+// Option+2: 오버레이 표시+클릭을 한 번에 일시정지/재개 (창을 숨기면 둘 다 멈춤)
+function toggleOverlay() {
+  if (!win || win.isDestroyed()) return;
+  if (win.isVisible()) win.hide();
+  else win.showInactive(); // 포커스를 뺏지 않고 다시 표시
+}
+
+// Option+1: 마우스가 있는 모니터를 새로 스캔 → 번호 오버레이 재생성
+function rescan() {
+  if (!win || win.isDestroyed()) return;
+  // 마우스 커서가 있는 디스플레이를 대상으로 (듀얼 모니터 대응)
+  const disp = screen.getDisplayNearestPoint(screen.getCursorScreenPoint());
+  const { x, y, width, height } = disp.bounds;
+  // 오버레이를 그 모니터로 옮기고, 숨겨져 있었다면 다시 표시
+  win.setBounds({ x, y, width, height });
+  if (!win.isVisible()) win.showInactive();
+  // scan.sh는 약 1초 뒤 now.png를 캡처한다. 배너가 그 캡처에 찍혀 콜아웃으로
+  // 오염되지 않도록, 캡처가 끝난 뒤(1.5초)에 "스캔 중" 배너를 켠다.
+  setTimeout(() => {
+    if (win && !win.isDestroyed()) win.webContents.send('overlay:status', true);
+  }, 1500);
+  // 그 모니터 영역만 캡처하도록 scan.sh 실행 (영역을 x,y,w,h 인자로 전달)
+  const p = spawn('bash', [path.join(__dirname, 'scan.sh'), `${x},${y},${width},${height}`], { cwd: __dirname });
+  p.on('exit', (code) => {
+    console.log('scan.sh 종료 코드:', code);
+    if (win && !win.isDestroyed()) win.webContents.send('overlay:status', false);
+  });
+}
+
+app.whenReady().then(() => {
+  createWindow();
+  const okScan = globalShortcut.register('Alt+1', rescan);       // Option+1 = 재스캔/재생성
+  const okToggle = globalShortcut.register('Alt+2', toggleOverlay); // Option+2 = 표시/클릭 토글
+  console.log('단축키 등록 → Option+1(재스캔):', okScan, '/ Option+2(표시토글):', okToggle);
+});
+app.on('will-quit', () => globalShortcut.unregisterAll());
 app.on('window-all-closed', () => app.quit());
