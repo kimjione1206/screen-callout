@@ -31,6 +31,25 @@ reads text labels, and [UI-DETR-1](https://huggingface.co/racineai/UI-DETR-1)
 Use `python3 explain.py <n>` to gather signals (nearby text, region, app hint, an
 image crop) for explaining any callout number.
 
+## Learning Mode
+
+Keep an app open and learn it interactively: number everything on screen, then ask
+an AI assistant (e.g. Claude) about any element **by number, both ways**.
+
+| Hotkey | Action |
+|---|---|
+| **`Option+1`** | Rescan the monitor your mouse is on → regenerate the numbered overlay |
+| **`Option+2`** | Pause/resume the overlay (hide callouts + click-through) |
+
+The assistant builds a semantic map (`index.json`) that tags each number with a
+**category** (purpose) and a one-line description, enabling two-way queries:
+
+- number → function — *"what is #47?"*
+- function → number — *"which number adds an object?"*, *"which numbers switch workspace?"*
+
+Numbers are reassigned on every rescan, so the old map is automatically discarded at
+the start of each rescan — answers always match the current screen.
+
 ## Requirements
 
 - **macOS on Apple Silicon** (uses `screencapture` / `sips`, PyTorch MPS)
